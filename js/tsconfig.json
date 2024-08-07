@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "outDir": "build",
+    "baseUrl": ".",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src", "test"],
+  "exclude": ["build", "node_modules", "*/**/*.spec.*"]
+}
