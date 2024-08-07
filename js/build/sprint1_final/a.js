@@ -26,22 +26,22 @@ function getNearestZero(xs) {
     // больше значения результата
     const res = new Array(xs.length);
     res.fill(Infinity);
-    let k = Infinity;
+    let curDistance = Infinity;
     for (let i = 0; i < res.length; i++) {
-        // если ноль пока не встретился, то k = Infinity,
+        // если ноль пока не встретился, то текущее расстояние = Infinity,
         // так как x + Infinity = Infinity
         // если встречаем ноль, запускаем счётчик
-        k = xs[i] === 0 ? 0 : k + 1;
-        res[i] = k;
+        curDistance = xs[i] === 0 ? 0 : curDistance + 1;
+        res[i] = curDistance;
     }
-    k = Infinity;
+    curDistance = Infinity;
     for (let i = res.length - 1; i >= 0; i--) {
-        k = xs[i] === 0 ? 0 : k + 1;
+        curDistance = xs[i] === 0 ? 0 : curDistance + 1;
         // если на обратном пути ноль ещё не встретился,
         // то оставляем значение, которое уже есть (x < Infinity),
         // иначе минимальное из счётчика и уже заполненного;
         // таким образом остаются кратчайшие расстояния до нуля
-        res[i] = Math.min(k, res[i]);
+        res[i] = Math.min(curDistance, res[i]);
     }
     return res;
 }
