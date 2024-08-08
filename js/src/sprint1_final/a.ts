@@ -13,7 +13,7 @@ _reader.on("line", (line: string) => {
 
 process.stdin.on("end", solve);
 
-function getNearestZero(xs: number[]) {
+function getNearestZeros(numbers: number[]) {
     // два прохода - вперёд и обратно;
     //
     // до тех пор, пока не встретили ноль,
@@ -27,7 +27,7 @@ function getNearestZero(xs: number[]) {
     // но перестаём увеличивать, если счетчик становится
     // больше значения результата
 
-    const res = new Array(xs.length);
+    const res = new Array(numbers.length);
     res.fill(Infinity);
 
     let curDistance = Infinity;
@@ -36,7 +36,7 @@ function getNearestZero(xs: number[]) {
         // если ноль пока не встретился, то текущее расстояние = Infinity,
         // так как x + Infinity = Infinity
         // если встречаем ноль, запускаем счётчик
-        curDistance = xs[i] === 0 ? 0 : curDistance + 1;
+        curDistance = numbers[i] === 0 ? 0 : curDistance + 1;
 
         res[i] = curDistance;
     }
@@ -44,7 +44,7 @@ function getNearestZero(xs: number[]) {
     curDistance = Infinity;
 
     for (let i = res.length - 1; i >= 0; i--) {
-        curDistance = xs[i] === 0 ? 0 : curDistance + 1;
+        curDistance = numbers[i] === 0 ? 0 : curDistance + 1;
 
         // если на обратном пути ноль ещё не встретился,
         // то оставляем значение, которое уже есть (x < Infinity),
@@ -59,7 +59,7 @@ function getNearestZero(xs: number[]) {
 function solve() {
     const n = readInt();
     const input = readArray();
-    process.stdout.write(`${getNearestZero(input).join(" ")}`);
+    process.stdout.write(`${getNearestZeros(input).join(" ")}`);
 }
 
 function readInt() {
@@ -78,5 +78,5 @@ function readArray() {
 }
 
 export const moduleA = {
-    getNearestZero,
+    getNearestZero: getNearestZeros,
 };
