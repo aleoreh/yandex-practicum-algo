@@ -69,8 +69,8 @@ function readInt() {
 }
 
 function readArray() {
-    var arr = _inputLines[_curLine]
-        .trim()
+    const arr = _inputLines[_curLine]
+        .trim() // `trim` здесь не принимал аргументы
         .split(" ")
         .map((num) => Number(num));
     _curLine++;
