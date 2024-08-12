@@ -11,7 +11,7 @@ _reader.on("line", (line) => {
     _inputLines.push(line);
 });
 process.stdin.on("end", solve);
-function getNearestZero(xs) {
+function getNearestZeros(numbers) {
     // два прохода - вперёд и обратно;
     //
     // до тех пор, пока не встретили ноль,
@@ -24,19 +24,19 @@ function getNearestZero(xs) {
     // на обратном проходе делаем то же самое,
     // но перестаём увеличивать, если счетчик становится
     // больше значения результата
-    const res = new Array(xs.length);
+    const res = new Array(numbers.length);
     res.fill(Infinity);
     let curDistance = Infinity;
     for (let i = 0; i < res.length; i++) {
         // если ноль пока не встретился, то текущее расстояние = Infinity,
         // так как x + Infinity = Infinity
         // если встречаем ноль, запускаем счётчик
-        curDistance = xs[i] === 0 ? 0 : curDistance + 1;
+        curDistance = numbers[i] === 0 ? 0 : curDistance + 1;
         res[i] = curDistance;
     }
     curDistance = Infinity;
     for (let i = res.length - 1; i >= 0; i--) {
-        curDistance = xs[i] === 0 ? 0 : curDistance + 1;
+        curDistance = numbers[i] === 0 ? 0 : curDistance + 1;
         // если на обратном пути ноль ещё не встретился,
         // то оставляем значение, которое уже есть (x < Infinity),
         // иначе минимальное из счётчика и уже заполненного;
@@ -48,7 +48,7 @@ function getNearestZero(xs) {
 function solve() {
     const n = readInt();
     const input = readArray();
-    process.stdout.write(`${getNearestZero(input).join(" ")}`);
+    process.stdout.write(`${getNearestZeros(input).join(" ")}`);
 }
 function readInt() {
     const n = Number(_inputLines[_curLine]);
@@ -56,13 +56,13 @@ function readInt() {
     return n;
 }
 function readArray() {
-    var arr = _inputLines[_curLine]
-        .trim()
+    const arr = _inputLines[_curLine]
+        .trim() // `trim` здесь не принимал аргументы
         .split(" ")
         .map((num) => Number(num));
     _curLine++;
     return arr;
 }
 exports.moduleA = {
-    getNearestZero,
+    getNearestZero: getNearestZeros,
 };
