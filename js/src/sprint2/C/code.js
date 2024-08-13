@@ -1,40 +1,63 @@
 // C. Нелюбимое дело
 
-let Node;
-
 if (process.env.REMOTE_JUDGE !== 'true') {
-    class Node_ {
+    class Node {
         constructor(value = null, next = null) {
             this.value = value;
             this.next = next;
         }
     }
-    Node = Node_;
 }
 
-function getIdx(node, index) {
-    while (index) {
-        node = node.next;
-        index -= 1;
+function drop(idx, node) {
+    if (node.value === null) return node;
+
+    let curNode = node;
+    let i = 0;
+    while (i < idx) {
+        curNode = curNode.next ?? new Node();
+        i++;
     }
+    return curNode;
+}
+
+function cons(value, node) {
+    return new Node(value, node);
+}
+
+function reverse(node) {
+    let acc = new Node();
+    let curNode = node;
+    while (curNode?.value) {
+        acc = new Node(curNode.value, acc);
+        curNode = curNode.next;
+    }
+    return acc;
+}
+
+function deleteAt(node, idx) {
+    let acc = new Node();
+    let i = 0;
+    let curNode = node;
+    while (curNode?.value) {
+        acc = i === idx ? acc : cons(curNode.value, acc);
+        curNode = curNode.next;
+        i++;
+    }
+    return reverse(acc);
+}
+
+function deleteAtMut(node, idx) {
+    if (idx === 0) return node.next;
+
+    const res = drop(idx - 1, node);
+    res.next = res?.next?.next || new Node();
+
     return node;
 }
 
-function cons(node, newNode) {
-    return node === null ? newNode : new Node(node.value, newNode);
-}
-
-function deleteIdx(node, idx) {
-    let acc = null;
-    let i = 0;
-    let currentNode = node;
-    while (currentNode) {
-        break;
-    }
-}
-
 function solution(node, idx) {
-    return deleteIdx(node, idx);
+    return deleteAt(node, idx);
 }
 
 function test() {

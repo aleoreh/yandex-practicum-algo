@@ -25,25 +25,25 @@ describe('C. Нелюбимое дело', () => {
     it('Удаляет узел 1 из списка', () => {
         const res = moduleC.solution(node0, 1);
 
-        expect(res).toEqual(node0);
-        expect(res.next).toEqual(node2);
-        expect(res.next.next).toEqual(node3);
+        expect(res.value).toEqual(node0.value);
+        expect(res.next.value).toEqual(node2.value);
+        expect(res.next.next.value).toEqual(node3.value);
     });
 
     it('Удаляет узел 2 из списка', () => {
         const res = moduleC.solution(node0, 2);
 
-        expect(res).toEqual(node0);
-        expect(res.next).toEqual(node1);
-        expect(res.next.next).toEqual(node3);
+        expect(res.value).toEqual(node0.value);
+        expect(res.next.value).toEqual(node1.value);
+        expect(res.next.next.value).toEqual(node3.value);
     });
 
     it('Удаляет узел 3 из списка', () => {
         const res = moduleC.solution(node0, 3);
 
-        expect(res).toEqual(node0);
-        expect(res.next).toEqual(node1);
-        expect(res.next.next).toEqual(node2);
-        expect(res.next.next.next).toEqual(null);
+        expect(res.value).toEqual(node0.value);
+        expect(res.next.value).toEqual(node1.value);
+        expect(res.next.next.value).toEqual(node2.value);
+        expect(res.next.next.next).toEqual(new Node());
     });
 });
