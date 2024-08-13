@@ -1,3 +1,10 @@
+class Node {
+    constructor(value = null, next = null) {
+        this.value = value;
+        this.next = next;
+    }
+}
+
 // C. Нелюбимое дело
 
 if (process.env.REMOTE_JUDGE !== 'true') {
