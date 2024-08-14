@@ -16,40 +16,26 @@ process.stdin.on('end', solve);
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 class BraceValidator {
-    _items = { brackets: 0, braces: 0, curlyBraces: 0 };
+    _items = [];
 
-    #operations = {
-        '(': () => {
-            this._items.braces++;
-        },
-        ')': () => {
-            const res = this._items.braces - 1;
-            if (res > 0) this._items.braces = res;
-        },
-        '[': () => {
-            this._items.brackets++;
-        },
-        ']': () => {
-            this._items.brackets--;
-        },
-        '{': () => {
-            this._items.curlyBraces++;
-        },
-        '}': () => {
-            this._items.curlyBraces--;
-        },
-    };
+    #isClosing(x, y) {
+        return (
+            (y === '(' && x === ')') ||
+            (y === '[' && x === ']') ||
+            (y === '{' && x === '}')
+        );
+    }
 
     push(value) {
-        if (value in this.#operations) this.#operations[value]();
+        if (this.#isClosing(value, this._items[0])) {
+            this._items.shift();
+        } else {
+            this._items.unshift(value);
+        }
     }
 
     isValid() {
-        return (
-            this._items.braces === 0 &&
-            this._items.brackets === 0 &&
-            this._items.curlyBraces === 0
-        );
+        return this._items.length === 0;
     }
 }
 
