@@ -18,22 +18,20 @@ if (process.env.REMOTE_JUDGE !== 'true') {
     }
 }
 
-function isEnd(node) {
-    return node === null || (node.value === null && node.next === null);
+function cons(value, head) {
+    const node = new Node(value, head);
+    if (head) head.prev = node;
+    return node;
 }
 
-function cons(value, node) {
-    const newNode = new Node(value, node);
-    node.prev = newNode;
-    return newNode;
-}
+function reverse(head) {
+    if (!head) return head;
 
-function reverse(node) {
-    let acc = new Node(node.value);
-    let curNode = node;
-    while (!isEnd(curNode)) {
-        acc = cons(curNode.value, acc);
-        curNode = curNode.next;
+    let acc = new Node(head.value);
+    let node = head.next;
+    while (node) {
+        acc = cons(node.value, acc);
+        node = node.next;
     }
     return acc;
 }
@@ -63,5 +61,7 @@ function test() {
 }
 
 module.exports = {
+    reverse,
     solution,
+    cons,
 };

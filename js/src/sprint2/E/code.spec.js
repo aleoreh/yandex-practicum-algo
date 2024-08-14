@@ -1,12 +1,22 @@
 import { expect, describe, it, beforeEach } from 'vitest';
 
-import { solution } from './code';
+import { solution, cons, reverse } from './code';
 
 class Node {
     constructor(value = null, next = null) {
         this.value = value;
         this.next = next;
     }
+}
+
+function print(head) {
+    let res = [];
+    let node = head;
+    while (node) {
+        res.push(node.value);
+        node = node.next;
+    }
+    return `[ ${res.join(', ')} ]`;
 }
 
 let node0;
@@ -25,6 +35,17 @@ beforeEach(() => {
 });
 
 describe('E. Всё наоборот', () => {
+    it('Помещает элемент в голову списка', () => {
+        const res = cons('newValue', node0);
+        expect(print(res)).toEqual('[ newValue, node0, node1, node2, node3 ]');
+    });
+
+    it('Реверс списка из одного элемента не меняет его', () => {
+        const init = cons(0, null);
+        const res = reverse(init);
+        expect(print(res)).toEqual(print(init));
+    });
+
     it('Переворачивает список', () => {
         const res = solution(node0);
 
