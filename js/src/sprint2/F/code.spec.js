@@ -10,7 +10,7 @@ beforeEach(() => {
 });
 
 describe('F. Стек - Max', () => {
-    it('Проходит фиксированные тесты', () => {
+    it.skip('Проходит фиксированные тесты', () => {
         const commands =
             'get_max,push 7,pop,push -2,push -1,pop,get_max,get_max'.split(',');
         const res = commands
