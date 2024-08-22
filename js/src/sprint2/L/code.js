@@ -63,5 +63,5 @@ function readArray() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 module.exports = {
-    fib: fibLastN,
+    fibLastN,
 };
