@@ -15,59 +15,37 @@ _reader.on('line', (line) => {
 
 process.stdin.on('end', solve);
 
-class _Vertex {
-    constructor(value, next = null) {
-        this.value = value;
-        this.next = next;
-    }
-}
-
-class List {
-    #head = null;
-    #size = 0;
-
-    static empty() {
-        return new List();
-    }
-
-    head() {
-        return this.#head;
-    }
-
-    push(value) {
-        this.#head = new _Vertex(value, this.#head);
-        this.#size++;
-        return this;
-    }
-
-    pull() {
-        const res = this.#head;
-        this.#head = this.#head === null ? null : this.#head.next;
-        this.#size = Math.max(this.#size - 1, 0);
-        return res;
-    }
-
-    get size() {
-        return this.#size;
-    }
-}
-
 class RPNCalculator {
-    #items = List.empty();
+    #items = [];
 
-    #add() {
-        // возможно, нужно проверить на достаточный размер стека
-        const operand1 = this.#items.pull();
-        const operand2 = this.#items.pull();
-        const res = operand1 + operand2;
-        this.#push(res);
+    #add_() {
+        // возможно, нужно проверить на достаточный размер стека (>= 2)
+        const operand1 = this.#items.pop();
+        const operand2 = this.#items.pop();
+        const res = operand2 + operand1;
+        this.#items.push(res);
     }
 
-    #subtract() {}
+    #subtract() {
+        const operand1 = this.#items.pop();
+        const operand2 = this.#items.pop();
+        const res = operand2 - operand1;
+        this.#items.push(res);
+    }
 
-    #multiply() {}
+    #multiply() {
+        const operand1 = this.#items.pop();
+        const operand2 = this.#items.pop();
+        const res = operand2 * operand1;
+        this.#items.push(res);
+    }
 
-    #divide() {}
+    #divide() {
+        const operand1 = this.#items.pop();
+        const operand2 = this.#items.pop();
+        const res = Math.floor(operand2 / operand1);
+        this.#items.push(res);
+    }
 
     #push(operand) {
         this.#items.push(operand);
@@ -76,7 +54,7 @@ class RPNCalculator {
     execute(value) {
         switch (value) {
             case '+':
-                this.#add();
+                this.#add_();
                 break;
             case '-':
                 this.#subtract();
@@ -88,12 +66,12 @@ class RPNCalculator {
                 this.#divide();
                 break;
             default:
-                this.#push();
+                this.#push(parseInt(value));
         }
     }
 
     get result() {
-        return this.#items.head().value;
+        return this.#items[this.#items.length - 1];
     }
 }
 
@@ -106,7 +84,7 @@ function createCommand(command) {
 function solve() {
     const input = readArray();
 
-    const calculator = new RPNCalculator(m);
+    const calculator = new RPNCalculator();
 
     const commands = input.map(createCommand);
 
