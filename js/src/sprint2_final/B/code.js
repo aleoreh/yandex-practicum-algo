@@ -87,7 +87,7 @@ class RPNCalculator {
                 this.#operations.divide();
                 break;
             default:
-                this.#operations.push(parseInt(value));
+                this.#operations.push(parseInt(value, 10));
         }
     }
 
