@@ -105,14 +105,20 @@ class RPNCalculator {
     }
 }
 
+function executeCalculation(operations) {
+    const calculator = new RPNCalculator(RPNOperations);
+
+    calculator.execute(operations);
+
+    return calculator.result;
+}
+
 function solve() {
     const input = readArray();
 
-    const calculator = new RPNCalculator(RPNOperations);
+    const res = executeCalculation(input);
 
-    calculator.execute(input);
-
-    process.stdout.write(`${calculator.result}\n`);
+    process.stdout.write(`${res}\n`);
 }
 
 function readInt() {
