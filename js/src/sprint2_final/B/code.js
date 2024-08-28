@@ -39,44 +39,48 @@ class RPNOperations {
         this.#stack.push(fn(operand2, operand1));
     }
 
-    constructor(Stack) {
-        this.#stack = new Stack();
-    }
-
-    parse(value) {
-        switch (value) {
-            case '+':
-                return () => this.add();
-            case '-':
-                return () => this.subtract();
-            case '*':
-                return () => this.multiply();
-            case '/':
-                return () => this.divide();
-            default:
-                return () => this.push(parseInt(value, 10));
-        }
-    }
-
-    add() {
+    #add_() {
         // возможно, нужно проверить на достаточный размер стека (>= 2)
         this.#pushCalculation((x, y) => y + x);
     }
 
-    subtract() {
+    #subtract() {
         this.#pushCalculation((x, y) => y - x);
     }
 
-    multiply() {
+    #multiply() {
         this.#pushCalculation((x, y) => y * x);
     }
 
-    divide() {
+    #divide() {
         this.#pushCalculation((x, y) => Math.floor(y / x));
     }
 
-    push(operand) {
+    #push(operand) {
         this.#stack.push(operand);
+    }
+
+    constructor(Stack) {
+        this.#stack = new Stack();
+    }
+
+    push(value) {
+        switch (value) {
+            case '+':
+                this.#add_();
+                break;
+            case '-':
+                this.#subtract();
+                break;
+            case '*':
+                this.#multiply();
+                break;
+            case '/':
+                this.#divide();
+                break;
+            default:
+                this.#push(parseInt(value, 10));
+        }
     }
 
     get result() {
@@ -93,7 +97,7 @@ class RPNCalculator {
 
     execute(commands) {
         // принимаем массив команд, чтобы не зависеть от формата входных данных задачи
-        commands.forEach((command) => this.#operations.parse(command)());
+        commands.forEach((command) => this.#operations.push(command));
     }
 
     get result() {
