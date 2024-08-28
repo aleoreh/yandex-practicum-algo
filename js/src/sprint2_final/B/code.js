@@ -15,82 +15,109 @@ _reader.on('line', (line) => {
 
 process.stdin.on('end', solve);
 
-class RPNCalculator {
+class Stack {
     #items = [];
 
-    #add_() {
-        // возможно, нужно проверить на достаточный размер стека (>= 2)
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = operand2 + operand1;
-        this.#items.push(res);
+    push(value) {
+        this.#items.push(value);
     }
 
-    #subtract() {
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = operand2 - operand1;
-        this.#items.push(res);
+    pop() {
+        return this.#items.pop();
     }
 
-    #multiply() {
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = operand2 * operand1;
-        this.#items.push(res);
-    }
-
-    #divide() {
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = Math.floor(operand2 / operand1);
-        this.#items.push(res);
-    }
-
-    #push(operand) {
-        this.#items.push(operand);
-    }
-
-    execute(value) {
-        switch (value) {
-            case '+':
-                this.#add_();
-                break;
-            case '-':
-                this.#subtract();
-                break;
-            case '*':
-                this.#multiply();
-                break;
-            case '/':
-                this.#divide();
-                break;
-            default:
-                this.#push(parseInt(value));
-        }
-    }
-
-    get result() {
+    top() {
         return this.#items[this.#items.length - 1];
     }
 }
 
-function createCommand(command) {
-    return (calc) => {
-        calc.execute(command);
-    };
+class RPNOperations {
+    #stack;
+
+    constructor(Stack) {
+        this.#stack = new Stack();
+    }
+
+    add() {
+        // возможно, нужно проверить на достаточный размер стека (>= 2)
+        const operand1 = this.#stack.pop();
+        const operand2 = this.#stack.pop();
+        const res = operand2 + operand1;
+        this.#stack.push(res);
+    }
+
+    subtract() {
+        const operand1 = this.#stack.pop();
+        const operand2 = this.#stack.pop();
+        const res = operand2 - operand1;
+        this.#stack.push(res);
+    }
+
+    multiply() {
+        const operand1 = this.#stack.pop();
+        const operand2 = this.#stack.pop();
+        const res = operand2 * operand1;
+        this.#stack.push(res);
+    }
+
+    divide() {
+        const operand1 = this.#stack.pop();
+        const operand2 = this.#stack.pop();
+        const res = Math.floor(operand2 / operand1);
+        this.#stack.push(res);
+    }
+
+    push(operand) {
+        this.#stack.push(operand);
+    }
+
+    get result() {
+        return this.#stack.top();
+    }
+}
+
+class RPNCalculator {
+    #operations;
+
+    #executeCommand(value) {
+        switch (value) {
+            case '+':
+                this.#operations.add();
+                break;
+            case '-':
+                this.#operations.subtract();
+                break;
+            case '*':
+                this.#operations.multiply();
+                break;
+            case '/':
+                this.#operations.divide();
+                break;
+            default:
+                this.#operations.push(parseInt(value));
+        }
+    }
+
+    constructor(Operations) {
+        this.#operations = new Operations(Stack);
+    }
+
+    execute(commands) {
+        // принимаем массив команд, чтобы не зависеть от формата входных данных задачи
+        commands.forEach((command) => this.#executeCommand(command));
+    }
+
+    get result() {
+        return this.#operations.result;
+    }
 }
 
 function solve() {
     const input = readArray();
 
-    const calculator = new RPNCalculator();
+    const calculator = new RPNCalculator(RPNOperations);
 
-    const commands = input.map(createCommand);
-
-    commands.forEach((command) => {
-        command(calculator);
-    });
+    calculator.execute(input);
 
     process.stdout.write(`${calculator.result}\n`);
 }
@@ -116,6 +143,6 @@ function readArray() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 module.exports = {
+    RPNOperations,
     RPNCalculator,
-    createCommand,
 };
