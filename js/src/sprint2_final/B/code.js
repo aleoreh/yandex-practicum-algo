@@ -34,37 +34,30 @@ class Stack {
 class RPNOperations {
     #stack;
 
+    #pushCalculation(fn) {
+        const [operand2, operand1] = [this.#stack.pop(), this.#stack.pop()];
+        this.#stack.push(fn(operand2, operand1));
+    }
+
     constructor(Stack) {
         this.#stack = new Stack();
     }
 
     add() {
         // возможно, нужно проверить на достаточный размер стека (>= 2)
-        const operand1 = this.#stack.pop();
-        const operand2 = this.#stack.pop();
-        const res = operand2 + operand1;
-        this.#stack.push(res);
+        this.#pushCalculation((x, y) => y + x);
     }
 
     subtract() {
-        const operand1 = this.#stack.pop();
-        const operand2 = this.#stack.pop();
-        const res = operand2 - operand1;
-        this.#stack.push(res);
+        this.#pushCalculation((x, y) => y - x);
     }
 
     multiply() {
-        const operand1 = this.#stack.pop();
-        const operand2 = this.#stack.pop();
-        const res = operand2 * operand1;
-        this.#stack.push(res);
+        this.#pushCalculation((x, y) => y * x);
     }
 
     divide() {
-        const operand1 = this.#stack.pop();
-        const operand2 = this.#stack.pop();
-        const res = Math.floor(operand2 / operand1);
-        this.#stack.push(res);
+        this.#pushCalculation((x, y) => Math.floor(y / x));
     }
 
     push(operand) {
