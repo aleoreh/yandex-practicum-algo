@@ -27,7 +27,7 @@ class Dequeue {
     }
 
     #isEmpty() {
-        return this.#size <= 0
+        return this.#size <= 0;
     }
 
     static incrementPointer(pointer, maxSize) {
@@ -47,7 +47,7 @@ class Dequeue {
 
     pushFront(value) {
         if (this.#isFull()) {
-            return new Error();
+            throw new Error('Стэк переполнен');
         }
 
         this.#items[this.#front] = value;
@@ -57,7 +57,7 @@ class Dequeue {
 
     pushBack(value) {
         if (this.#isFull()) {
-            return new Error();
+            throw new Error('Стэк переполнен');
         }
 
         this.#items[this.#back] = value;
@@ -67,7 +67,7 @@ class Dequeue {
 
     popFront() {
         if (this.#isEmpty()) {
-            return new Error();
+            throw new Error('Стэк пуст');
         }
 
         const newFront = Dequeue.incrementPointer(this.#front, this.#maxSize);
@@ -82,7 +82,7 @@ class Dequeue {
 
     popBack() {
         if (this.#isEmpty()) {
-            return new Error();
+            throw new Error('Стэк пуст');
         }
 
         const newBack = Dequeue.decrementPointer(this.#back, this.#maxSize);
@@ -102,21 +102,34 @@ function createCommand(command) {
 
         switch (cmd) {
             case 'push_back':
-                return deque.pushBack(parseInt(valueStr)) instanceof Error
-                    ? 'error'
-                    : null;
+                try {
+                    deque.pushBack(parseInt(valueStr));
+                    return null;
+                } catch (_) {
+                    return 'error';
+                }
+
             case 'push_front':
-                return deque.pushFront(parseInt(valueStr)) instanceof Error
-                    ? 'error'
-                    : null;
+                try {
+                    deque.pushFront(parseInt(valueStr));
+                    return null;
+                } catch (_) {
+                    return 'error';
+                }
+
             case 'pop_back':
-                const popBackResult = deque.popBack();
-                return popBackResult instanceof Error ? 'error' : popBackResult;
+                try {
+                    return deque.popBack();
+                } catch (_) {
+                    return 'error';
+                }
+
             case 'pop_front':
-                const popFrontResult = deque.popFront();
-                return popFrontResult instanceof Error
-                    ? 'error'
-                    : popFrontResult;
+                try {
+                    return deque.popFront();
+                } catch (_) {
+                    return 'error';
+                }
         }
     };
 }
