@@ -22,6 +22,14 @@ class Dequeue {
     #back = 0;
     #items = [];
 
+    #isFull() {
+        return this.#size >= this.#maxSize;
+    }
+
+    #isEmpty() {
+        return this.#size <= 0
+    }
+
     static incrementPointer(pointer, maxSize) {
         return (pointer + 1) % maxSize;
     }
@@ -38,7 +46,7 @@ class Dequeue {
     }
 
     pushFront(value) {
-        if (this.#size >= this.#maxSize) {
+        if (this.#isFull()) {
             return new Error();
         }
 
@@ -48,7 +56,7 @@ class Dequeue {
     }
 
     pushBack(value) {
-        if (this.#size >= this.#maxSize) {
+        if (this.#isFull()) {
             return new Error();
         }
 
@@ -58,7 +66,7 @@ class Dequeue {
     }
 
     popFront() {
-        if (this.#size <= 0) {
+        if (this.#isEmpty()) {
             return new Error();
         }
 
@@ -73,7 +81,7 @@ class Dequeue {
     }
 
     popBack() {
-        if (this.#size <= 0) {
+        if (this.#isEmpty()) {
             return new Error();
         }
 
