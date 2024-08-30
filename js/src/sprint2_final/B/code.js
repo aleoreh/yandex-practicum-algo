@@ -1,4 +1,4 @@
-// Описание алгоритма находится здесь: https://github.com/aleoreh/yandex-practicum-algo/tree/dev/js/src/sprint2_final/A
+// Описание алгоритма находится здесь: https://github.com/aleoreh/yandex-practicum-algo/tree/dev/js/src/sprint2_final/B
 
 const _readline = require('readline');
 
@@ -15,43 +15,56 @@ _reader.on('line', (line) => {
 
 process.stdin.on('end', solve);
 
-class RPNCalculator {
+class Stack {
     #items = [];
+
+    push(value) {
+        this.#items.push(value);
+    }
+
+    pop() {
+        return this.#items.pop();
+    }
+
+    top() {
+        return this.#items[this.#items.length - 1];
+    }
+}
+
+class RPNOperations {
+    #stack;
+
+    #pushCalculation(fn) {
+        const [operand2, operand1] = [this.#stack.pop(), this.#stack.pop()];
+        this.#stack.push(fn(operand2, operand1));
+    }
 
     #add_() {
         // возможно, нужно проверить на достаточный размер стека (>= 2)
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = operand2 + operand1;
-        this.#items.push(res);
+        this.#pushCalculation((x, y) => y + x);
     }
 
     #subtract() {
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = operand2 - operand1;
-        this.#items.push(res);
+        this.#pushCalculation((x, y) => y - x);
     }
 
     #multiply() {
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = operand2 * operand1;
-        this.#items.push(res);
+        this.#pushCalculation((x, y) => y * x);
     }
 
     #divide() {
-        const operand1 = this.#items.pop();
-        const operand2 = this.#items.pop();
-        const res = Math.floor(operand2 / operand1);
-        this.#items.push(res);
+        this.#pushCalculation((x, y) => Math.floor(y / x));
     }
 
     #push(operand) {
-        this.#items.push(operand);
+        this.#stack.push(operand);
     }
 
-    execute(value) {
+    constructor(Stack) {
+        this.#stack = new Stack();
+    }
+
+    push(value) {
         switch (value) {
             case '+':
                 this.#add_();
@@ -66,33 +79,46 @@ class RPNCalculator {
                 this.#divide();
                 break;
             default:
-                this.#push(parseInt(value));
+                this.#push(parseInt(value, 10));
         }
     }
 
     get result() {
-        return this.#items[this.#items.length - 1];
+        return this.#stack.top();
     }
 }
 
-function createCommand(command) {
-    return (calc) => {
-        calc.execute(command);
-    };
+class RPNCalculator {
+    #operations;
+
+    constructor(Operations) {
+        this.#operations = new Operations(Stack);
+    }
+
+    execute(commands) {
+        // принимаем массив команд, чтобы не зависеть от формата входных данных задачи
+        commands.forEach((command) => this.#operations.push(command));
+    }
+
+    get result() {
+        return this.#operations.result;
+    }
+}
+
+function executeCalculation(operations) {
+    const calculator = new RPNCalculator(RPNOperations);
+
+    calculator.execute(operations);
+
+    return calculator.result;
 }
 
 function solve() {
     const input = readArray();
 
-    const calculator = new RPNCalculator();
+    const res = executeCalculation(input);
 
-    const commands = input.map(createCommand);
-
-    commands.forEach((command) => {
-        command(calculator);
-    });
-
-    process.stdout.write(`${calculator.result}\n`);
+    process.stdout.write(`${res}\n`);
 }
 
 function readInt() {
@@ -116,6 +142,6 @@ function readArray() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 module.exports = {
+    RPNOperations,
     RPNCalculator,
-    createCommand,
 };
