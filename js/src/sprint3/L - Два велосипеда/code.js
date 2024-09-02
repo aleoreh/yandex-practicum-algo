@@ -18,22 +18,27 @@ process.stdin.on('end', solve);
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 function findHappyDay(observations, amount) {
-    function recur(left, right, prevMid) {
-        if (left === right) return -1;
-
-        const mid = Math.floor((left + right) / 2);
-        const midValue = observations[mid];
-
-        if (midValue <= amount && amount < observations[prevMid]) {
-            return prevMid + 1;
+    function recur(left, right, mid) {
+        const distance = right - left;
+        if (distance <= 1) {
+            const indexes = [left, right].filter(
+                (x) => observations[x] >= amount,
+            );
+            return indexes.length === 0 ? -1 : indexes[0] + 1;
         }
 
-        return midValue > amount
-            ? recur(left, mid, mid)
-            : recur(mid, right, mid);
+        if (observations[mid] >= amount) {
+            return recur(left, mid, left + Math.floor((mid - left) / 2));
+        } else {
+            return recur(mid, right, mid + Math.floor((right - mid) / 2));
+        }
     }
 
-    return recur(0, observations.length - 1, 0);
+    return recur(
+        0,
+        observations.length - 1,
+        Math.floor((observations.length - 1) / 2),
+    );
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -44,9 +49,10 @@ function solve() {
     const input = readArray();
     const amount = readInt();
 
-    const res = findHappyDay(input, amount);
+    const res1 = findHappyDay(input, amount);
+    const res2 = findHappyDay(input, amount * 2);
 
-    process.stdout.write(`${res.join(' ')}\n`);
+    process.stdout.write(`${res1} ${res2}`);
 }
 
 function readInt() {
