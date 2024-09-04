@@ -29,16 +29,16 @@ function generateBraces(n) {
         return idx === 0;
     }
 
-    function recur(i, acc, cur) {
+    function recur(i, cur) {
         if (i === 0) {
             res.push(cur);
         } else {
-            recur(i - 1, acc, cur + '(');
-            recur(i - 1, acc, cur + ')');
+            recur(i - 1, cur + '(');
+            recur(i - 1, cur + ')');
         }
     }
 
-    recur(2 * n, [], '');
+    recur(2 * n, '');
 
     return res.filter(isCorrect);
 }

@@ -28,49 +28,36 @@ const LETTERS = {
     9: 'wxyz',
 };
 
-function divmod(value, divider) {
-    return [Math.floor(value / divider), value % divider];
-}
-
-function add(xs, n) {
-    function capacity(x) {
-        return x[1];
-    }
-    function value(x) {
-        return x[0];
-    }
-    let i = xs.length - 1;
-    const acc = [];
-    let [q, r] = [n, 0];
-
-    while (i >= 0) {
-        [q, r] = divmod(q, capacity(xs[i]));
-        acc.unshift(r + value(xs[i]));
-        if (q === 0) break;
-        i--;
-    }
-
-    return acc;
-}
-
-add([[0, 2], [2, 3]], 3)
-
-function combine(buttons, letters) {
+function generate(buttons) {
     const res = [];
+    const permutationsCount = buttons.reduce(
+        (acc, nominals) => acc * nominals.length,
+        1,
+    );
+
     function recur(i, cur) {
         if (i === 0) {
             res.push(cur);
         } else {
+            buttons.forEach((btn) => {
+                recur(i - 1, cur + btn[i]);
+            });
         }
     }
+
+    recur(permutationsCount, '');
+
+    return res;
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 function solve() {
-    const n = readInt(); // длина скобочной последовательности
+    const buttonsStr = readString();
 
-    const res = generateBraces(n);
+    const buttons = buttonsStr.split('').map((x) => parseInt(x));
+
+    const res = generate(buttons.map((btn) => LETTERS[btn]));
 
     process.stdout.write(`${res.join('\n')}`);
 }
@@ -96,6 +83,6 @@ function readArray() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 module.exports = {
-    combine,
-    add,
+    generate,
+    LETTERS,
 };

@@ -1,12 +1,12 @@
 import { expect, describe, beforeEach } from 'vitest';
 import { it } from '@fast-check/vitest';
 
-import { combine } from './code';
+import { generate, LETTERS } from './code';
 
-describe('B. Комбинации', () => {
+describe.only('B. Комбинации', () => {
     it('Проходит фиксированный тест №1', () => {
-        const buttons = [2, 3];
-        expect(combine(buttons)).toEqual([
+        const buttons = [LETTERS[2], LETTERS[3]];
+        expect(generate(buttons)).toEqual([
             'ad',
             'ae',
             'af',
@@ -20,8 +20,8 @@ describe('B. Комбинации', () => {
     });
 
     it('Проходит фиксированный тест №2', () => {
-        const buttons = [9, 2];
-        expect(combine(buttons)).toEqual([
+        const buttons = [LETTERS[9], LETTERS[2]];
+        expect(generate(buttons)).toEqual([
             'wa',
             'wb',
             'wc',
