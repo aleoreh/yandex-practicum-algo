@@ -1,5 +1,3 @@
-// Описание алгоритма находится здесь: https://github.com/aleoreh/yandex-practicum-algo/tree/dev/js/src/sprint2_final/B
-
 const _readline = require('readline');
 
 const _reader = _readline.createInterface({
@@ -28,26 +26,19 @@ const LETTERS = {
     9: 'wxyz',
 };
 
-function generate(buttons) {
-    const res = [];
-    const permutationsCount = buttons.reduce(
-        (acc, nominals) => acc * nominals.length,
-        1,
-    );
+function flat(xs) {
+    return xs.reduce((acc, x) => [...acc, ...x], []);
+}
 
-    function recur(i, cur) {
-        if (i === 0) {
-            res.push(cur);
-        } else {
-            buttons.forEach((btn) => {
-                recur(i - 1, cur + btn[i]);
-            });
+function lettersComb(inputLetters) {
+    function rec(input_, acc, res) {
+        if (input_.length === 0) {
+            return [...res, acc];
         }
+        const [head, ...rest] = input_;
+        return flat(head.map((x) => rec(rest, [...acc, x], res)));
     }
-
-    recur(permutationsCount, '');
-
-    return res;
+    return rec(inputLetters, [], []).map((x) => x.join(''));
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -57,9 +48,9 @@ function solve() {
 
     const buttons = buttonsStr.split('').map((x) => parseInt(x));
 
-    const res = generate(buttons.map((btn) => LETTERS[btn]));
+    const res = lettersComb(buttons.map((btn) => LETTERS[btn].split('')));
 
-    process.stdout.write(`${res.join('\n')}`);
+    process.stdout.write(`${res.join(' ')}`);
 }
 
 function readInt() {
@@ -83,6 +74,6 @@ function readArray() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 module.exports = {
-    generate,
+    lettersComb,
     LETTERS,
 };
