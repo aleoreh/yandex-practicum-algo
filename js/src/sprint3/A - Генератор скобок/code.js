@@ -1,5 +1,3 @@
-// Описание алгоритма находится здесь: https://github.com/aleoreh/yandex-practicum-algo/tree/dev/js/src/sprint2_final/B
-
 const _readline = require('readline');
 
 const _reader = _readline.createInterface({
