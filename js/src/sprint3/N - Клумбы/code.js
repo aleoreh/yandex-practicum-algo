@@ -4,7 +4,7 @@ const _reader = _readline.createInterface({
     input: process.stdin,
 });
 
-const _inputLines = [];
+let _inputLines = [];
 let _curLine = 0;
 
 _reader.on('line', (line) => {
@@ -21,7 +21,7 @@ function solve(input) {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-function run() {
+function parse() {
     readInt();
 
     const values = [];
@@ -29,7 +29,14 @@ function run() {
 
     while (line) {
         values.push([parseInt(line[0]), parseInt(line[1])]);
+        line = readArray();
     }
+
+    return values;
+}
+
+function run() {
+    const values = parse(_inputLines);
 
     const outputArr = solve(values);
 
@@ -45,7 +52,7 @@ function run() {
 function solveUnlined(inputText) {
     _inputLines = inputText.split('\n');
 
-    const values = parse(_inputLines)
+    const values = parse(_inputLines);
 
     return solve(values);
 }
