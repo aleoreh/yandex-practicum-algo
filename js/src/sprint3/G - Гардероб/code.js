@@ -21,34 +21,54 @@ process.stdin.on('end', run);
  * @returns {number[]}
  */
 function sortWardrobe(numbers) {
-    return [];
+    if (numbers.length === 0) return numbers;
+
+    const res = new Array(3);
+    for (let i = 0; i < res.length; i++) {
+        res[i] = [];
+    }
+
+    numbers.forEach((x) => {
+        res[x].push(x);
+    });
+
+    return Array.prototype.concat(...res);
 }
 
 /**
- *
- * @param {number[]} numbers
- * @returns {string}
+ * @returns {number[]}
  */
-function solve(numbers) {
-    const res = sortWardrobe(numbers);
-    return res.join(' ');
-}
-
-/**
- * @returns {[number]}
- */
-function parseInput() {
+function parse() {
     const n = readInt();
+    if (n === 0) return [];
+
     const input = readArray();
 
     return input.map((x) => parseInt(x, 10));
 }
 
+/**
+ *  Получает на вход результат функции `parse`
+ * и вычисляет результат
+ * @param {number[]} numbers
+ * @returns {string}
+ */
+function solve(numbers) {
+    return sortWardrobe(numbers);
+}
+
+/**
+ * форматирует результата для вывода
+ */
+function format(value) {
+    return value.join(' ');
+}
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 function run() {
-    const values = parseInput();
-    const output = solve(values);
+    const output = format(solve(parse()));
+
     process.stdout.write(`${output}`);
 }
 
@@ -59,9 +79,9 @@ function run() {
 
 function solveUnlined(inputText) {
     _curLine = 0;
-    _inputLines = inputText.trim().split('\n');
-    const values = parseInput();
-    return solve(values);
+    _inputLines = inputText.split('\n').map((x) => x.trim());
+
+    return format(solve(parse()));
 }
 
 function readInt() {

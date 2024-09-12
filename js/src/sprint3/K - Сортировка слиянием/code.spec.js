@@ -3,7 +3,7 @@ import { describe, expect } from 'vitest';
 
 import { merge, merge_sort } from './code';
 
-describe.only('3. K. Сортировка слиянием', () => {
+describe.skip('3. K. Сортировка слиянием', () => {
     it('Проходит фиксированный тест №1', () => {
         const input = [1, 4, 9, 2, 10, 11];
         const expected = [1, 2, 4, 9, 10, 11];
