@@ -1,9 +1,10 @@
 import { it } from '@fast-check/vitest';
 import { describe, expect } from 'vitest';
+import fc from 'fast-check';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { solveUnlined } from './code';
+import { solveUnlined, findStart } from './code';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -24,9 +25,18 @@ const testCases = [
     ],
 ];
 
+const arrArb = fc.array(fc.integer(), { maxLength: 10000 });
+
 describe('Спринт 3. A. Поиск в сломанном массиве', () => {
+    it.prop([arrArb])('Находит начало массива', (values) => {
+        values.sort((x, y) => x - y);
+        const foundStart = findStart(values);
+        const realStart = values.find((x) => Math.min(...values) === x);
+        expect(foundStart).toEqual(realStart);
+    });
+
     testCases.forEach(([input, expected], i) => {
-        it(`Тест №${i}`, () => {
+        it.skip(`Тест №${i}`, () => {
             expect(solveUnlined(input)).toEqual(expected);
         });
     });

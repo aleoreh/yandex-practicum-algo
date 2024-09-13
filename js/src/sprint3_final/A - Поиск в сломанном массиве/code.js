@@ -25,25 +25,27 @@ process.stdin.on('end', run);
 Общая временная сложность - O(log n) + O(log n) = O(log n)
 */
 
+/**
+ * @param {number[]} values
+ */
 function findStart(values) {
-    let i = 0;
-    let step = Math.floor(values.length / 2);
-    let dirSwitched = false;
-
-    while (!dirSwitched) {
-        const prevValue = values[i];
-        const nextValue = values[i + step];
-        if (
-            (step === 1 && nextValue < prevValue) ||
-            (step === -1 && nextValue > prevValue)
-        ) {
-            break;
-        }
-        i += step;
-        step = Math.round(step / 2) * Math.abs(nextValue - prevValue);
+    function middle(x, y) {
+        return x + Math.floor((y - x) / 2);
     }
 
-    return i;
+    if (values.length === 0) return undefined;
+
+    let [l, m, r] = [0, middle(0, values.length - 1), values.length];
+
+    while (true) {
+        if (l === m) return r;
+        if (m === r) return l;
+        if (values[l] < values[m]) {
+            [l, m, r] = [l, middle(l, m - 1), m - 1];
+        } else {
+            [l, m, r] = [m + 1, middle(m + 1, r), r];
+        }
+    }
 }
 
 /**
@@ -130,4 +132,4 @@ function asInt(value) {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-module.exports = { solveUnlined };
+module.exports = { solveUnlined, findStart };
