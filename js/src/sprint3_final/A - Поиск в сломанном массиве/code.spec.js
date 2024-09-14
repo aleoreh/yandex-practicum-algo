@@ -31,7 +31,7 @@ describe('Спринт 3. A. Поиск в сломанном массиве', (
     it.prop([arrArb])('Находит начало массива', (values) => {
         values.sort((x, y) => x - y);
         const foundStart = findStart(values);
-        const realStart = values.find((x) => Math.min(...values) === x);
+        const realStart = values.findIndex((x) => Math.min(...values) === x) ?? -1;
         expect(foundStart).toEqual(realStart);
     });
 
