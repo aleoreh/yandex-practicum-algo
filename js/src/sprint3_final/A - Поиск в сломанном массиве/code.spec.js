@@ -4,7 +4,7 @@ import fc from 'fast-check';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { solveUnlined, findStart } from './code';
+import { solveUnlined, findStart, ringSearch } from './code';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -25,18 +25,49 @@ const testCases = [
     ],
 ];
 
-const arrArb = fc.array(fc.integer(), { maxLength: 10000 });
+const arrayWithValueToSearch = fc
+    .uniqueArray(fc.integer(), { minLength: 1, maxLength: 10000 })
+    .map((arr) => [
+        arr,
+        Math.floor(Math.random() * arr.length),
+        Math.floor(Math.random() * arr.length),
+    ]);
+
+function shiftArray(arr, offset) {
+    const res = [];
+    for (let i = arr.length - offset; i < arr.length; i++) {
+        res.push(arr[i]);
+    }
+    for (let i = 0; i < arr.length - offset; i++) {
+        res.push(arr[i]);
+    }
+    return res;
+}
 
 describe('Спринт 3. A. Поиск в сломанном массиве', () => {
-    it.prop([arrArb])('Находит начало массива', (values) => {
-        values.sort((x, y) => x - y);
-        const foundStart = findStart(values);
-        const realStart = values.findIndex((x) => Math.min(...values) === x) ?? -1;
-        expect(foundStart).toEqual(realStart);
-    });
+    it.prop([arrayWithValueToSearch])(
+        'Находит начало массива',
+        ([correctArr, searchIndex, offset]) => {
+            correctArr.sort((x, y) => x - y);
+            const offsetArr = shiftArray(correctArr, offset);
+            const foundStart = findStart(offsetArr);
+            expect(foundStart).toEqual(offset);
+        },
+    );
+
+    it.skip.prop([arrayWithValueToSearch])(
+        'Производит поиск в смещённом массиве',
+        ([correctArr, searchIndex, offset]) => {
+            correctArr.sort((x, y) => x - y);
+            const offsetArr = shiftArray(correctArr, offset);
+            const searchValue = correctArr[searchIndex];
+            const foundIndex = ringSearch(offsetArr, offset, searchValue);
+            expect(offsetArr[foundIndex]).toEqual(searchValue);
+        },
+    );
 
     testCases.forEach(([input, expected], i) => {
-        it.skip(`Тест №${i}`, () => {
+        it(`Тест №${i}`, () => {
             expect(solveUnlined(input)).toEqual(expected);
         });
     });
