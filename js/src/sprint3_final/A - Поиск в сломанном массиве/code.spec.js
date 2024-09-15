@@ -4,25 +4,15 @@ import fc from 'fast-check';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { solveUnlined, findStart, ringSearch } from './code';
+import { findStart, ringSearch, brokenSearch } from './code';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 const testCases = [
-    [
-        `9
-5
-19 21 100 101 1 4 5 7 12
-`,
-        `6`,
-    ],
-    [
-        `2
-1
-5 1
-`,
-        `1`,
-    ],
+    [5, [19, 21, 100, 101, 1, 4, 5, 7, 12], 6],
+    [1, [5, 1], 1],
+    [2, [3, 4, 1], -1],
+    [1, [4], -1]
 ];
 
 const arrayWithValueToSearch = fc
@@ -66,9 +56,9 @@ describe('Спринт 3. A. Поиск в сломанном массиве', (
         },
     );
 
-    testCases.forEach(([input, expected], i) => {
+    testCases.forEach(([k, arr, expected], i) => {
         it(`Тест №${i}`, () => {
-            expect(solveUnlined(input)).toEqual(expected);
+            expect(brokenSearch(arr, k)).toEqual(expected);
         });
     });
 });

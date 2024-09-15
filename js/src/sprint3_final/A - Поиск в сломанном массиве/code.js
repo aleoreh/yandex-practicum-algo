@@ -1,18 +1,3 @@
-const _readline = require('readline');
-
-const _reader = _readline.createInterface({
-    input: process.stdin,
-});
-
-let _inputLines = [];
-let _curLine = 0;
-
-_reader.on('line', (line) => {
-    _inputLines.push(line);
-});
-
-process.stdin.on('end', run);
-
 // ~~~~~~~~~~~~~~~ решение ~~~~~~~~~~~~~~~ //
 
 /**
@@ -98,12 +83,12 @@ function ringSearch(arr, start, value) {
     }
 
     if (arr.length === 0) return undefined;
-    if (arr.length === 1) return 0;
+    if (arr.length === 1) return arr[0] === value ? 0 : undefined;
 
     let [l, m, r] = [0, middle(0, arr.length - 1), arr.length - 1];
 
     while (true) {
-        if (m < 0) return undefined;
+        if (m < 0 || m >= arr.length || l > r) return undefined;
 
         if (value === arr[coord(m)]) {
             return coord(m);
@@ -124,84 +109,15 @@ function ringSearch(arr, start, value) {
  */
 function brokenSearch(arr, k) {
     const start = findStart(arr);
-    return ringSearch(arr, start, k);
+    const res = ringSearch(arr, start, k);
+    return res ?? -1;
 }
 
-// ~~ вспомогательные функции для чтения ~ //
-
-/**
- * @returns {[number[], number]}
- */
-function parse() {
-    readValue();
-    const k = readValue((x) => parseInt(x, 10));
-    const numbers = readArray((x) => parseInt(x, 10));
-
-    return [numbers, k];
+function test() {
+    const arr = [19, 21, 100, 101, 1, 4, 5, 7, 12];
+    if (brokenSearch(arr, 5) !== 6) {
+        console.error('WA');
+    }
 }
 
-/**
- *  Получает на вход результат функции `parse`
- * и вычисляет результат
- * @param {[number[], number]}
- * @returns {number}
- */
-function solve([values, k]) {
-    return brokenSearch(values, k);
-}
-
-/**
- * форматирует результата для вывода
- * @param {[number, number][]}
- */
-function format(value) {
-    return value.toString();
-}
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-function run() {
-    const output = format(solve(parse()));
-
-    process.stdout.write(`${output}`);
-}
-
-/**
- * Запускает решение, принимая на вход весь ввод
- * @param {string} inputText - полный текст ввода, не разделённый на строки
- */
-
-function solveUnlined(inputText) {
-    _curLine = 0;
-    _inputLines = inputText.split('\n').map((x) => x.trim());
-
-    return format(solve(parse()));
-}
-
-function readValue(fn) {
-    const res = _inputLines[_curLine];
-    _curLine++;
-    return fn ? fn(res) : res;
-}
-
-/**
- *
- * @returns {string[]}
- */
-function readArray(fn) {
-    const arr = _inputLines[_curLine].trim().split(' ');
-    _curLine++;
-    return fn ? arr.map(fn) : arr;
-}
-
-function asInt(value) {
-    return Array.isArray(value)
-        ? value.map((x) => parseInt(x, 10))
-        : typeof value === 'number'
-          ? value
-          : parseInt(value, 10);
-}
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-module.exports = { solveUnlined, findStart, ringSearch };
+module.exports = { findStart, ringSearch, brokenSearch };
