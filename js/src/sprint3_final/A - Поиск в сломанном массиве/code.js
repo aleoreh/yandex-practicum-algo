@@ -29,8 +29,6 @@ function middle(x, y) {
 1. Находим начало массива с помощью бинарного поиска:
     каждый раз сужаем промежуток вдвое и берём тот, на котором последовательность
     убывает;
-    если последовательность везде возрастает, то начало сортировки приходится
-    на начало массива;
     в момент, когда средняя точка совпадает с одним из концов промежутка,
     имеем начало сортировки, равное индексу минимального значения из концов;
     временная сложность - O(log n), так как на каждом шаге длина
@@ -41,35 +39,35 @@ function middle(x, y) {
 */
 
 /**
- * @param {number[]} values
+ * @param {number[]} arr
  */
-function findStart(values) {
+function findStart(arr) {
     function intervals(vl, vm, vr) {
         const interv1 = vl < vm ? 1 : vl === vm ? 0 : -1;
         const interv2 = vm < vr ? 1 : vm === vr ? 0 : -1;
         return [interv1, interv2];
     }
 
-    if (values.length === 0) {
-        throw new Error('Последовательность не может быть пустой!')
+    if (arr.length === 0) {
+        throw new Error('Последовательность не может быть пустой!');
     }
-    if (values.length === 1) return 0;
-    if (values[0] < values[values.length - 1]) return 0;
+    if (arr.length === 1) return 0;
+    if (arr[0] < arr[arr.length - 1]) return 0;
 
-    let [l, m, r] = [0, middle(0, values.length - 1), values.length - 1];
+    let [l, m, r] = [0, middle(0, arr.length - 1), arr.length - 1];
 
     // цикл доходит до условия выхода, так как промежуток сокращается
     // в два раза на каждом шаге;
     // условие выхода (зависит от interv1 и interv2) отрабатывается
     // в любом случае (присутствуют все комбинации (-1, 0, 1))
     while (true) {
-        const [interv1, interv2] = intervals(values[l], values[m], values[r]);
+        const [interv1, interv2] = intervals(arr[l], arr[m], arr[r]);
 
         if (interv1 === -1 && interv2 === -1) {
             throw new Error('Последовательность не отсортирована!');
         }
 
-        if (interv1 === 1 && interv2 === 1 && values[l] > values[r]) {
+        if (interv1 === 1 && interv2 === 1 && arr[l] > arr[r]) {
             return m;
         }
 
@@ -77,7 +75,7 @@ function findStart(values) {
         // (средняя точка совпала с одним из концов)
         // поэтому минимальный из них будет началом массива
         if (interv1 === 0 || interv2 === 0) {
-            return values[l] < values[r] ? l : r;
+            return arr[l] < arr[r] ? l : r;
         }
 
         // берём убывающий промежуток
@@ -99,7 +97,6 @@ function ringSearch(arr, start, value) {
 
     let [l, m, r] = [0, middle(0, arr.length - 1), arr.length - 1];
 
-    let i = 1;
     while (true) {
         if (m < 0) return undefined;
 
@@ -112,23 +109,17 @@ function ringSearch(arr, start, value) {
         } else {
             [l, m, r] = [m + 1, middle(m + 1, r), r];
         }
-
-        i++;
-        if (i > 110) {
-            console.error('Зацикливание: ', arr, start, value);
-            break;
-        }
     }
 }
 
 /**
  *
- * @param {number[]} values - массив, в котором производится поиск
+ * @param {number[]} arr - массив, в котором производится поиск
  * @param {number} k - искомое значение
  */
-function brokenSearch(values, k) {
-    const start = findStart(values);
-    return ringSearch(values, start, k);
+function brokenSearch(arr, k) {
+    const start = findStart(arr);
+    return ringSearch(arr, start, k);
 }
 
 // ~~ вспомогательные функции для чтения ~ //

@@ -55,7 +55,7 @@ describe('Спринт 3. A. Поиск в сломанном массиве', (
         },
     );
 
-    it.skip.prop([arrayWithValueToSearch])(
+    it.prop([arrayWithValueToSearch])(
         'Производит поиск в смещённом массиве',
         ([correctArr, searchIndex, offset]) => {
             correctArr.sort((x, y) => x - y);
