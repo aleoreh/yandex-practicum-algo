@@ -90,6 +90,9 @@ function findStart(arr) {
 }
 
 function ringSearch(arr, start, value) {
+    /**
+     * Преобразует координату несломанного массива в координату сломанного
+     */
     function coord(x) {
         return (x + start) % arr.length;
     }
